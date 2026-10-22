@@ -55,6 +55,15 @@ jobs:
       timeout-minutes: 10
       run: |
         dotnet test src/cartservice/
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+    - name: Node.js Unit Tests
+      timeout-minutes: 10
+      run: |
+        cd src/paymentservice
+        npm ci
+        npm run test:coverage
   deployment-tests:
     runs-on: ubuntu-24.04
     needs: code-tests
