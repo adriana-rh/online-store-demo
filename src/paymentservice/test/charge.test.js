@@ -79,9 +79,14 @@ describe('charge', () => {
     assertCreditCardError(() => charge(request({ number: '4432801561520455' })), /^Credit card info is invalid$/);
   });
 
-  // simple-card-validator throws a bare string for empty numbers, so this surfaces as gRPC UNKNOWN.
-  it('rejects an empty card number', { todo: 'charge() should wrap validator errors as InvalidCreditCard' }, () => {
+  it('rejects an empty card number', () => {
     assertCreditCardError(() => charge(request({ number: '' })), /^Credit card info is invalid$/);
+  });
+
+  it('rejects a missing card number', () => {
+    const req = request();
+    delete req.credit_card.credit_card_number;
+    assertCreditCardError(() => charge(req), /^Credit card info is invalid$/);
   });
 
   for (const [type, number] of [['amex', AMEX], ['discover', DISCOVER]]) {

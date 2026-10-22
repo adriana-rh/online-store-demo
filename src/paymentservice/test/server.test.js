@@ -127,6 +127,16 @@ describe('HipsterShopServer over gRPC', () => {
     );
   });
 
+  it('returns an invalid card error for an empty card number', async () => {
+    await assert.rejects(
+      chargeRpc({ amount: AMOUNT, credit_card: { ...VALID_CARD, credit_card_number: '' } }),
+      (err) => {
+        assert.equal(err.details, 'Credit card info is invalid');
+        return true;
+      }
+    );
+  });
+
   it('serves the health check', async () => {
     const response = await new Promise((resolve, reject) => {
       healthClient.check({ service: 'hipstershop.PaymentService' },
